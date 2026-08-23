@@ -1,0 +1,38 @@
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        Map<Integer, List<Integer>> preMap = new HashMap<>();
+        Set<Integer> visitSet = new HashSet<>();
+
+        for(int i = 0; i < numCourses; i++) {
+            preMap.put(i, new ArrayList<>());   
+        }
+
+        for (int[] pre: prerequisites) {
+            preMap.get(pre[0]).add(pre[1]);
+        }
+
+        for(int i = 0; i < numCourses; i++){
+            if(!dfs(i, preMap, visitSet)) { 
+                return false;
+            }
+        }
+        return true;
+        
+    }
+
+    public boolean dfs(int i, Map<Integer, List<Integer>> preMap,  Set<Integer> visitSet) {
+        if(visitSet.contains(i)) return false;
+
+        if(preMap.get(i).isEmpty()) return true;
+
+        visitSet.add(i);
+        for(int pre: preMap.get(i)) {
+            if(!dfs(pre, preMap, visitSet)){
+                return false;
+            }
+        }
+        visitSet.remove(i);
+        preMap.put(i, new ArrayList<>());
+        return true;
+    }
+}
